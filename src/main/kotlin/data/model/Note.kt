@@ -4,11 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Note(
-    val id: Int? = null,
+    val id: Int,
     val ownerId: Int,
     val title: String,
     val content: String,
     val type: String,
-    val creationTime: String? = null,
-    val isPinned: Boolean = false
+    val creationTime: Long,
+    val isPinned: Boolean
 )

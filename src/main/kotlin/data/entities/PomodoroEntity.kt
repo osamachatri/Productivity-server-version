@@ -2,10 +2,17 @@ package com.oussama_chatri.data.entities
 
 import org.ktorm.schema.*
 
-object Pomodoro : Table<Nothing>("pomodoro") {
+object Pomodoros : Table<Nothing>("pomodoro") {
     val id = int("id").primaryKey()
     val ownerId = int("owner_id")
-    val sessionCount = int("session_count")
-    val focusTime = int("focus_time")
-    val breakTime = int("break_time")
+    val priority = varchar("priority")
+    val title = varchar("title")
+    val description = text("description")
+    val numPomodoros = int("num_pomodoros")
+    val creationTime = long("creation_time")
+    val pomodoroTime = int("pomodoro_time")
+    val shortBreakTime = int("short_break_time")
+    val longBreakTime = int("long_break_time")
+    val progress = float("progress")
 }
+

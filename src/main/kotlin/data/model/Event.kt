@@ -4,10 +4,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Event(
-    val id: Int? = null,
+    val id: Int,
     val ownerId: Int,
+    val priority: String,
+    val type: String,
     val title: String,
-    val description: String,
-    val eventDate: String? = null,
-    val location: String
+    val description: String?,
+    val startTime: Long,
+    val endTime: Long?
 )

@@ -8,6 +8,6 @@ object Notes : Table<Nothing>("notes") {
     val title = varchar("title")
     val content = text("content")
     val type = varchar("type")
-    val creationTime = timestamp("creation_time")
+    val creationTime = long("creation_time")
     val isPinned = boolean("is_pinned")
 }

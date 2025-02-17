@@ -1,45 +1,44 @@
 package com.oussama_chatri.data.daos
 
-import com.oussama_chatri.DatabaseFactory.db
-import com.oussama_chatri.data.entities.Users
-import com.oussama_chatri.data.model.User
+import com.oussama_chatri.data.entities.Accounts
+import com.oussama_chatri.data.model.Account
+import org.ktorm.database.Database
 import org.ktorm.dsl.*
 
-class UserDao {
-    fun getAllUsers(): List<User> {
-        return db.from(Users).select().map { row ->
-            User(
-                userId = row[Users.userId],
-                username = row[Users.username]!!,
-                fullName = row[Users.fullName]!!,
-                email = row[Users.email]!!,
-                phoneNumber = row[Users.phoneNumber],
-                passwordHash = row[Users.passwordHash]!!
-            )
-        }
+class AccountDao(private val database: Database) {
+    fun getAllAccounts(): List<Account> {
+        return database.from(Accounts).select()
+            .map { row -> Account(
+                row[Accounts.userId]!!,
+                row[Accounts.username]!!,
+                row[Accounts.fullName]!!,
+                row[Accounts.email]!!,
+                row[Accounts.phoneNumber],
+                row[Accounts.passwordHash]!!
+            ) }
     }
 
-    fun getUserById(id: Int): User? {
-        return db.from(Users).select().where { Users.userId eq id }.map { row ->
-            User(
-                userId = row[Users.userId],
-                username = row[Users.username]!!,
-                fullName = row[Users.fullName]!!,
-                email = row[Users.email]!!,
-                phoneNumber = row[Users.phoneNumber],
-                passwordHash = row[Users.passwordHash]!!
-            )
-        }.firstOrNull()
+    fun getAccountById(id: Int): Account? {
+        return database.from(Accounts).select().where { Accounts.userId eq id }
+            .map { row -> Account(
+                row[Accounts.userId]!!,
+                row[Accounts.username]!!,
+                row[Accounts.fullName]!!,
+                row[Accounts.email]!!,
+                row[Accounts.phoneNumber],
+                row[Accounts.passwordHash]!!
+            ) }
+            .firstOrNull()
     }
 
-    fun addUser(user: User): Boolean {
-        val inserted = db.insert(Users) {
-            set(Users.username, user.username)
-            set(Users.fullName, user.fullName)
-            set(Users.email, user.email)
-            set(Users.phoneNumber, user.phoneNumber)
-            set(Users.passwordHash, user.passwordHash)
+    fun createAccount(account: Account) {
+        database.insert(Accounts) {
+            set(it.username, account.username)
+            set(it.fullName, account.fullName)
+            set(it.email, account.email)
+            set(it.phoneNumber, account.phoneNumber)
+            set(it.passwordHash, account.passwordHash)
         }
-        return inserted > 0
     }
 }
+

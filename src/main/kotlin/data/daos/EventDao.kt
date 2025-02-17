@@ -1,35 +1,37 @@
 package com.oussama_chatri.data.daos
 
-import com.oussama_chatri.DatabaseFactory.db
 import com.oussama_chatri.data.entities.Events
 import com.oussama_chatri.data.model.Event
+import org.ktorm.database.Database
 import org.ktorm.dsl.from
 import org.ktorm.dsl.insert
 import org.ktorm.dsl.map
 import org.ktorm.dsl.select
 
-class EventDao {
+class EventDao(private val database: Database) {
     fun getAllEvents(): List<Event> {
-        return db.from(Events).select().map { row ->
-            Event(
-                id = row[Events.id],
-                ownerId = row[Events.ownerId]!!,
-                title = row[Events.title]!!,
-                description = row[Events.description]!!,
-                eventDate = row[Events.eventDate].toString(),
-                location = row[Events.location]!!
-            )
-        }
+        return database.from(Events).select()
+            .map { row -> Event(
+                row[Events.id]!!,
+                row[Events.ownerId]!!,
+                row[Events.priority]!!,
+                row[Events.type]!!,
+                row[Events.title]!!,
+                row[Events.description],
+                row[Events.startTime]!!,
+                row[Events.endTime]
+            ) }
     }
 
-    fun addEvent(event: Event): Boolean {
-        val inserted = db.insert(Events) {
-            set(Events.ownerId, event.ownerId)
-            set(Events.title, event.title)
-            set(Events.description, event.description)
-            set(Events.eventDate, event.eventDate)
-            set(Events.location, event.location)
+    fun createEvent(event: Event) {
+        database.insert(Events) {
+            set(it.ownerId, event.ownerId)
+            set(it.priority, event.priority)
+            set(it.type, event.type)
+            set(it.title, event.title)
+            set(it.description, event.description)
+            set(it.startTime, event.startTime)
+            set(it.endTime, event.endTime)
         }
-        return inserted > 0
     }
 }

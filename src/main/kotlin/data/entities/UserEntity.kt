@@ -5,7 +5,7 @@ import org.ktorm.schema.int
 import org.ktorm.schema.text
 import org.ktorm.schema.varchar
 
-object Users : Table<Nothing>("accounts") {
+object Accounts : Table<Nothing>("accounts") {
     val userId = int("user_id").primaryKey()
     val username = varchar("username")
     val fullName = varchar("full_name")

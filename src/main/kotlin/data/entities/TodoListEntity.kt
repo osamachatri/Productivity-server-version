@@ -2,11 +2,15 @@ package com.oussama_chatri.data.entities
 
 import org.ktorm.schema.*
 
-object TodoLists : Table<Nothing>("todo_lists") {
+object ToDoLists : Table<Nothing>("to_do_lists") {
     val id = int("id").primaryKey()
     val ownerId = int("owner_id")
     val title = varchar("title")
     val description = text("description")
-    val creationTime = timestamp("creation_time")
-    val isCompleted = boolean("is_completed")
+    val listOfWorks = text("list_of_works")
+    val creationTime = long("creation_time")
+    val priority = varchar("priority")
+    val isPinned = boolean("is_pinned")
+    val progress = float("progress")
 }
+

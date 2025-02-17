@@ -4,9 +4,15 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Pomodoro(
-    val id: Int? = null,
+    val id: Int,
     val ownerId: Int,
-    val sessionCount: Int,
-    val focusTime: Int,
-    val breakTime: Int
+    val priority: String,
+    val title: String,
+    val description: String?,
+    val numPomodoros: Int,
+    val creationTime: Long,
+    val pomodoroTime: Int,
+    val shortBreakTime: Int,
+    val longBreakTime: Int,
+    val progress: Float
 )

@@ -4,10 +4,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Work(
-    val id: Int? = null,
     val ownerId: Int,
     val title: String,
-    val description: String,
-    val startTime: String? = null,
-    val endTime: String? = null
+    val description: String?,
+    val startTime: Long,
+    val endTime: Long?,
+    val progress: Float
 )

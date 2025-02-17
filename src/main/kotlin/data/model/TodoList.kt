@@ -3,11 +3,15 @@ package com.oussama_chatri.data.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TodoList(
-    val id: Int? = null,
+data class ToDoList(
+    val id: Int,
     val ownerId: Int,
     val title: String,
-    val description: String,
-    val creationTime: String? = null,
-    val isCompleted: Boolean = false
+    val description: String?,
+    val listOfWorks: List<Work>,
+    val creationTime: Long,
+    val priority: String,
+    val isPinned: Boolean,
+    val progress: Float
 )
+
