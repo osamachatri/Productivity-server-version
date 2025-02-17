@@ -21,19 +21,25 @@ fun main(args: Array<String>): Unit {
 
 fun Application.module() {
 
-    configureSecurity()
-    install(ContentNegotiation) {
-        json()
-    }
-
-    DatabaseFactory.db
+//    configureSecurity()
+//    install(ContentNegotiation) {
+//        json()
+//    }
+//
+//    DatabaseFactory.db
+//
+//    routing {
+//        get("/") {
+//            call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
+//        }
+//        authRoutes()
+//        notesRoutes()
+//    }
 
     routing {
         get("/") {
             call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
         }
-        authRoutes()
-        notesRoutes()
     }
 
 }

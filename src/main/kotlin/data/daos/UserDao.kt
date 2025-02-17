@@ -1,49 +1,45 @@
 package com.oussama_chatri.data.daos
 
 import com.oussama_chatri.DatabaseFactory.db
-import com.oussama_chatri.data.entities.UserEntity
+import com.oussama_chatri.data.entities.Users
 import com.oussama_chatri.data.model.User
 import org.ktorm.dsl.*
 
-object UserDao {
-    fun createUser(name : String, username: String, email: String, password: String, level : Int = 1): Int {
-        return db.insert(UserEntity) {
-            set(it.name, name)
-            set(it.username, username)
-            set(it.email, email)
-            set(it.password, password)
-            set(it.level, level)
+class UserDao {
+    fun getAllUsers(): List<User> {
+        return db.from(Users).select().map { row ->
+            User(
+                userId = row[Users.userId],
+                username = row[Users.username]!!,
+                fullName = row[Users.fullName]!!,
+                email = row[Users.email]!!,
+                phoneNumber = row[Users.phoneNumber],
+                passwordHash = row[Users.passwordHash]!!
+            )
         }
     }
 
-    fun findUserByEmail(email: String): User? {
-        return db.from(UserEntity).select()
-            .where { UserEntity.email eq email }
-            .map {
-                User(
-                    id = it[UserEntity.id]!!,
-                    name = it[UserEntity.name]!!,
-                    username = it[UserEntity.username]!!,
-                    email = it[UserEntity.email]!!,
-                    password = it[UserEntity.password]!!,
-                    level = it[UserEntity.level]!!
-                )
-            }.firstOrNull()
+    fun getUserById(id: Int): User? {
+        return db.from(Users).select().where { Users.userId eq id }.map { row ->
+            User(
+                userId = row[Users.userId],
+                username = row[Users.username]!!,
+                fullName = row[Users.fullName]!!,
+                email = row[Users.email]!!,
+                phoneNumber = row[Users.phoneNumber],
+                passwordHash = row[Users.passwordHash]!!
+            )
+        }.firstOrNull()
     }
 
-    fun findUserByUsername(username: String): User? {
-        return db.from(UserEntity).select()
-            .where { UserEntity.username eq username }
-            .map {
-                User(
-                    id = it[UserEntity.id]!!,
-                    name = it[UserEntity.name]!!,
-                    username = it[UserEntity.username]!!,
-                    email = it[UserEntity.email]!!,
-                    password = it[UserEntity.password]!!,
-                    level = it[UserEntity.level]!!
-                )
-            }.firstOrNull()
+    fun addUser(user: User): Boolean {
+        val inserted = db.insert(Users) {
+            set(Users.username, user.username)
+            set(Users.fullName, user.fullName)
+            set(Users.email, user.email)
+            set(Users.phoneNumber, user.phoneNumber)
+            set(Users.passwordHash, user.passwordHash)
+        }
+        return inserted > 0
     }
-
 }
