@@ -9,7 +9,6 @@ object DatabaseFactory {
             url = "jdbc:mysql://localhost:3306/productivity",
             driver = "com.mysql.cj.jdbc.Driver",
             user = "root",
-            password = "Oussama"
         )
     }
 }

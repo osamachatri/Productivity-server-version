@@ -10,7 +10,6 @@ fun Application.configureSecurity() {
 
     val SECRET_KEY = "oussama_chatri.secretkey"
     val ISSUER = "http://127.0.0.1:8080/"
-    val EXPIRATION_TIME = 36_000_00 * 24 * 7
     val Audience = "http://127.0.0.1:8080/productivity"
 
     authentication {
