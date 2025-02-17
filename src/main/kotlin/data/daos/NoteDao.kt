@@ -1,66 +1,37 @@
 package com.oussama_chatri.data.daos
 
+
 import com.oussama_chatri.DatabaseFactory.db
-import com.oussama_chatri.data.entities.NotesEntity
+import com.oussama_chatri.data.entities.Notes
 import com.oussama_chatri.data.model.Note
-import org.ktorm.dsl.*
+import org.ktorm.dsl.from
+import org.ktorm.dsl.insert
+import org.ktorm.dsl.map
+import org.ktorm.dsl.select
 
-object NoteDao {
-    fun createNote(
-        title: String,
-        content: String,
-        userId: String,
-        editedAt: Long,
-        type: String,
-    ): Int {
-        return db.insert(NotesEntity) {
-            set(it.title, title)
-            set(it.content, content)
-            set(it.userId, userId)
-            set(it.editedAt, editedAt)
-            set(it.type, type)
+class NoteDao {
+    fun getAllNotes(): List<Note> {
+        return db.from(Notes).select().map { row ->
+            Note(
+                id = row[Notes.id],
+                ownerId = row[Notes.ownerId]!!,
+                title = row[Notes.title]!!,
+                content = row[Notes.content]!!,
+                type = row[Notes.type]!!,
+                creationTime = row[Notes.creationTime].toString(),
+                isPinned = row[Notes.isPinned] ?: false
+            )
         }
     }
 
-    fun getUserNotes(userId: String): List<Note> {
-        return db.from(NotesEntity).select()
-            .where { NotesEntity.userId eq userId }
-            .map {
-                Note(
-                    id = it[NotesEntity.id]!!,
-                    userId = it[NotesEntity.userId]!!,
-                    title = it[NotesEntity.title]!!,
-                    content = it[NotesEntity.content]!!,
-                    editedAt = it[NotesEntity.editedAt]!!,
-                    type = it[NotesEntity.type]!!,
-                )
-            }
-    }
-
-    fun updateNote(
-        noteId: Int,
-        title: String,
-        content: String,
-        userId: String,
-        editedAt: Long,
-        type: String,
-    ): Boolean {
-        val updatedRows = db.update(NotesEntity) {
-            set(it.title, title)
-            set(it.content, content)
-            set(it.editedAt, editedAt)
-            set(it.type, type)
-            where {
-                (it.id eq noteId) and (it.userId eq userId)
-            }
+    fun addNote(note: Note): Boolean {
+        val inserted = db.insert(Notes) {
+            set(Notes.ownerId, note.ownerId)
+            set(Notes.title, note.title)
+            set(Notes.content, note.content)
+            set(Notes.type, note.type)
+            set(Notes.isPinned, note.isPinned)
         }
-        return updatedRows > 0
-    }
-
-    fun deleteNote(noteId: Int, userId: String): Boolean {
-        val deletedRows = db.delete(NotesEntity) {
-            (it.id eq noteId) and (it.userId eq userId)
-        }
-        return deletedRows > 0
+        return inserted > 0
     }
 }
