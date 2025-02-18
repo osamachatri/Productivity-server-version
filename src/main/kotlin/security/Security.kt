@@ -8,11 +8,13 @@ import io.ktor.server.auth.jwt.*
 
 fun Application.configureSecurity() {
 
+    println("✅ Authentication Plugin is being installed!")
+
     val SECRET_KEY = "oussama_chatri.secretkey"
     val ISSUER = "http://127.0.0.1:8080/"
     val Audience = "http://127.0.0.1:8080/productivity"
 
-    authentication {
+    install(Authentication) {
         jwt("auth-jwt") {
             realm = "ktor app"
             verifier(
@@ -22,7 +24,7 @@ fun Application.configureSecurity() {
                     .build()
             )
             validate { credential ->
-                credential.payload.getClaim("userId").asString()?.let { userId ->
+                credential.payload.getClaim("user_id").asString()?.let { userId ->
                     if (userId.isNotEmpty()) JWTPrincipal(credential.payload) else null
                 }
             }

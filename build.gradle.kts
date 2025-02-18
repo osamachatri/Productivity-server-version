@@ -40,4 +40,5 @@ dependencies {
     // JSON Serialization
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.6")
     implementation("io.ktor:ktor-server-content-negotiation:2.3.6")
+
 }

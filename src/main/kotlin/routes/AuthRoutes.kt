@@ -1,7 +1,6 @@
 package com.oussama_chatri.routes
 
 import com.oussama_chatri.data.daos.AccountDao
-import com.oussama_chatri.data.entities.Accounts.userId
 import com.oussama_chatri.security.JwtConfig
 import io.ktor.http.*
 import io.ktor.server.request.*
@@ -32,8 +31,6 @@ fun Route.authRoutes() {
 
             val request = call.receive<RegisterRequest>()
 
-            println(request)
-
             // Check if email is used before
             val existingEmail = AccountDao().getAccountByEmail(request.email)
             if (existingEmail != null) {
@@ -59,6 +56,8 @@ fun Route.authRoutes() {
                 phoneNumber = request.phoneNumber,
                 passwordHash = hashedPassword
             )
+
+            println(userId)
 
             if (userId > 0) {
                 // Generate JWT token
@@ -86,7 +85,7 @@ fun Route.authRoutes() {
                     if (user != null){
                         val verifyPassword = BCrypt.checkpw(request.password, user.passwordHash)
                         if (verifyPassword) {
-                            val token = JwtConfig.generateToken(userId.toString())
+                            val token = JwtConfig.generateToken(user.userId.toString())
                             call.respond(HttpStatusCode.OK, mapOf("token" to token))
                         }else {
                             call.respond(HttpStatusCode.Unauthorized, "Passwords do not match")
@@ -103,7 +102,7 @@ fun Route.authRoutes() {
                     if (user != null) {
                         val verifyPassword = BCrypt.checkpw(request.password, user.passwordHash)
                         if (verifyPassword) {
-                            val token = JwtConfig.generateToken(userId.toString())
+                            val token = JwtConfig.generateToken(user.userId.toString())
                             call.respond(HttpStatusCode.OK, mapOf("token" to token))
                         } else {
                             call.respond(HttpStatusCode.Unauthorized, "Passwords do not match")

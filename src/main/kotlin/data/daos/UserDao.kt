@@ -91,13 +91,22 @@ class AccountDao(private val database: Database = DatabaseFactory.db) {
     fun createAccount(
         username: String, fullName: String, email: String, phoneNumber: String?, passwordHash: String
     ) : Int {
-        return database.insert(Accounts) {
+        database.insert(Accounts) {
             set(it.username, username)
             set(it.fullName, fullName)
             set(it.email, email)
             set(it.phoneNumber, phoneNumber)
             set(it.passwordHash, passwordHash)
         }
+        return getUserId(username) ?: -1
+    }
+
+    fun getUserId(username: String): Int? {
+        return database.from(Accounts)
+            .select(Accounts.userId)
+            .where { Accounts.username eq username }
+            .map { it[Accounts.userId] }
+            .firstOrNull()
     }
 }
 

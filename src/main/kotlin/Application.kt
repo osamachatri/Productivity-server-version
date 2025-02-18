@@ -1,6 +1,8 @@
 package com.oussama_chatri
 
 import com.oussama_chatri.routes.authRoutes
+import com.oussama_chatri.routes.notesRoutes
+import com.oussama_chatri.security.configureSecurity
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -17,16 +19,13 @@ fun main(args: Array<String>): Unit {
 
 fun Application.module() {
 
-//    configureSecurity()
+    configureSecurity()
     install(ContentNegotiation) {
         json()
     }
 
-    DatabaseFactory.db
-
     routing {
         authRoutes()
-//        notesRoutes()
+        notesRoutes()
     }
-
 }
