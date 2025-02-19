@@ -1,5 +1,6 @@
 package com.oussama_chatri.data.daos
 
+import com.oussama_chatri.DatabaseFactory
 import com.oussama_chatri.data.entities.ToDoLists
 import com.oussama_chatri.data.model.ToDoList
 import com.oussama_chatri.data.model.Work
@@ -8,13 +9,16 @@ import kotlinx.serialization.json.Json
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 
-class ToDoListDao(private val database: Database) {
+class ToDoListDao(private val database: Database = DatabaseFactory.db) {
 
     private val json = Json { prettyPrint = true }
 
     // Get all ToDoLists from the database
-    fun getAllToDoLists(): List<ToDoList> {
+    fun getAllToDoLists(
+        ownerId: String
+    ): List<ToDoList> {
         return database.from(ToDoLists).select()
+            .where { ToDoLists.ownerId eq ownerId }
             .map { row ->
                 val worksJson = row[ToDoLists.listOfWorks]!!
                 val worksList: List<Work> = json.decodeFromString(worksJson)
@@ -25,6 +29,7 @@ class ToDoListDao(private val database: Database) {
                     description = row[ToDoLists.description],
                     listOfWorks = worksList,
                     creationTime = row[ToDoLists.creationTime]!!,
+                    editedTime = row[ToDoLists.editedTime]!!,
                     priority = row[ToDoLists.priority]!!,
                     isPinned = row[ToDoLists.isPinned]!!,
                     progress = row[ToDoLists.progress]!!
@@ -33,36 +38,64 @@ class ToDoListDao(private val database: Database) {
     }
 
     // Create a new ToDoList
-    fun createToDoList(toDoList: ToDoList) {
-        val serializedWorks = json.encodeToString(toDoList.listOfWorks)
+    fun createToDoList(
+        ownerId: String,
+        title: String,
+        description: String?,
+        listOfWorks: List<Work>,
+        creationTime: Long,
+        priority: String,
+        isPinned: Boolean,
+        progress: Float
+    ): Int {
+        val serializedWorks = json.encodeToString(listOfWorks)
 
-        database.insert(ToDoLists) {
-            set(it.ownerId, toDoList.ownerId)
-            set(it.title, toDoList.title)
-            set(it.description, toDoList.description)
+        return database.insert(ToDoLists) {
+            set(it.ownerId, ownerId)
+            set(it.title, title)
+            set(it.description, description)
             set(it.listOfWorks, serializedWorks)
-            set(it.creationTime, toDoList.creationTime)
-            set(it.priority, toDoList.priority)
-            set(it.isPinned, toDoList.isPinned)
-            set(it.progress, toDoList.progress)
+            set(it.creationTime, creationTime)
+            set(it.editedTime, creationTime)
+            set(it.priority, priority)
+            set(it.isPinned, isPinned)
+            set(it.progress, progress)
         }
     }
 
     // Update an existing ToDoList
-    fun updateToDoList(toDoList: ToDoList) {
-        val serializedWorks = json.encodeToString(toDoList.listOfWorks)  // Serialize works list to JSON string
+    fun updateToDoList(
+        id: Int,
+        ownerId: String,
+        title: String,
+        description: String?,
+        listOfWorks: List<Work>,
+        editedTime: Long,
+        priority: String,
+        isPinned: Boolean,
+        progress: Float
+    ) : Boolean{
+        val serializedWorks = json.encodeToString(listOfWorks)  // Serialize works list to JSON string
 
-        database.update(ToDoLists) {
-            set(it.ownerId, toDoList.ownerId)
-            set(it.title, toDoList.title)
-            set(it.description, toDoList.description)
+        val affectedRows = database.update(ToDoLists) {
+            set(it.title, title)
+            set(it.description, description)
             set(it.listOfWorks, serializedWorks)
-            set(it.creationTime, toDoList.creationTime)
-            set(it.priority, toDoList.priority)
-            set(it.isPinned, toDoList.isPinned)
-            set(it.progress, toDoList.progress)
-            where { it.id eq toDoList.id }
+            set(it.editedTime, editedTime)
+            set(it.priority, priority)
+            set(it.isPinned, isPinned)
+            set(it.progress, progress)
+            where { (it.id eq id) and (it.ownerId eq ownerId) }
         }
+
+        return affectedRows > 0
+    }
+
+    fun deleteToDoList(toDoListId: Int, ownerId: String): Boolean {
+        val affectedRows = database.delete(ToDoLists) {
+            (ToDoLists.id eq toDoListId) and (ToDoLists.ownerId eq ownerId)
+        }
+        return affectedRows > 0
     }
 }
 

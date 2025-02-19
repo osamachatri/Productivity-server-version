@@ -81,8 +81,6 @@ fun Route.notesRoutes() {
 
                 val request = call.receive<UpdatedNoteRequest>()
 
-
-
                 val updated = NoteDao().updateNote(
                     noteId = noteId,
                     ownerId = userId ?: "-1",
