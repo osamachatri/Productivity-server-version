@@ -2,6 +2,7 @@ package com.oussama_chatri
 
 import com.oussama_chatri.routes.authRoutes
 import com.oussama_chatri.routes.notesRoutes
+import com.oussama_chatri.routes.toDoListsRoutes
 import com.oussama_chatri.security.configureSecurity
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -24,8 +25,12 @@ fun Application.module() {
         json()
     }
 
+    DatabaseFactory.db
+
     routing {
         authRoutes()
         notesRoutes()
+        toDoListsRoutes()
+
     }
 }

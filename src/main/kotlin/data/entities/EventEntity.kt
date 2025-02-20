@@ -4,7 +4,7 @@ import org.ktorm.schema.*
 
 object Events : Table<Nothing>("events") {
     val id = int("id").primaryKey()
-    val ownerId = int("owner_id")
+    val ownerId = varchar("owner_id")
     val priority = varchar("priority")
     val type = varchar("type")
     val title = varchar("title")

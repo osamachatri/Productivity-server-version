@@ -3,14 +3,12 @@ package com.oussama_chatri.data.daos
 import com.oussama_chatri.data.entities.Events
 import com.oussama_chatri.data.model.Event
 import org.ktorm.database.Database
-import org.ktorm.dsl.from
-import org.ktorm.dsl.insert
-import org.ktorm.dsl.map
-import org.ktorm.dsl.select
+import org.ktorm.dsl.*
 
 class EventDao(private val database: Database) {
-    fun getAllEvents(): List<Event> {
+    fun getAllEvents(ownerId : String): List<Event> {
         return database.from(Events).select()
+            .where { Events.ownerId eq ownerId }
             .map { row -> Event(
                 row[Events.id]!!,
                 row[Events.ownerId]!!,
