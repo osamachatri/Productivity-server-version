@@ -2,8 +2,10 @@ package com.oussama_chatri.data.daos
 
 import com.oussama_chatri.DatabaseFactory
 import com.oussama_chatri.data.entities.ToDoLists
-import com.oussama_chatri.data.model.ToDoList
 import com.oussama_chatri.data.model.Work
+import com.oussama_chatri.Api.requests.ToDoListRequest
+import com.oussama_chatri.Api.requests.UpdatedToDoListRequest
+import com.oussama_chatri.Api.responses.ToDoListResponse
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.ktorm.database.Database
@@ -16,15 +18,13 @@ class ToDoListDao(private val database: Database = DatabaseFactory.db) {
     // Get all ToDoLists from the database
     fun getAllToDoLists(
         ownerId: String
-    ): List<ToDoList> {
+    ): List<ToDoListResponse> {
         return database.from(ToDoLists).select()
             .where { ToDoLists.ownerId eq ownerId }
             .map { row ->
                 val worksJson = row[ToDoLists.listOfWorks]!!
                 val worksList: List<Work> = json.decodeFromString(worksJson)
-                ToDoList(
-                    id = row[ToDoLists.id]!!,
-                    ownerId = row[ToDoLists.ownerId]!!,
+                ToDoListResponse(
                     title = row[ToDoLists.title]!!,
                     description = row[ToDoLists.description],
                     listOfWorks = worksList,
@@ -40,26 +40,20 @@ class ToDoListDao(private val database: Database = DatabaseFactory.db) {
     // Create a new ToDoList
     fun createToDoList(
         ownerId: String,
-        title: String,
-        description: String?,
-        listOfWorks: List<Work>,
-        creationTime: Long,
-        priority: String,
-        isPinned: Boolean,
-        progress: Float
+        request: ToDoListRequest
     ): Int {
-        val serializedWorks = json.encodeToString(listOfWorks)
+        val serializedWorks = json.encodeToString(request.listOfWorks)
 
         return database.insert(ToDoLists) {
             set(it.ownerId, ownerId)
-            set(it.title, title)
-            set(it.description, description)
+            set(it.title, request.title)
+            set(it.description, request.description)
             set(it.listOfWorks, serializedWorks)
-            set(it.creationTime, creationTime)
-            set(it.editedTime, creationTime)
-            set(it.priority, priority)
-            set(it.isPinned, isPinned)
-            set(it.progress, progress)
+            set(it.creationTime, request.creationTime)
+            set(it.editedTime, request.creationTime)
+            set(it.priority, request.priority)
+            set(it.isPinned, request.isPinned)
+            set(it.progress, request.progress)
         }
     }
 
@@ -67,24 +61,18 @@ class ToDoListDao(private val database: Database = DatabaseFactory.db) {
     fun updateToDoList(
         id: Int,
         ownerId: String,
-        title: String,
-        description: String?,
-        listOfWorks: List<Work>,
-        editedTime: Long,
-        priority: String,
-        isPinned: Boolean,
-        progress: Float
-    ) : Boolean{
-        val serializedWorks = json.encodeToString(listOfWorks)  // Serialize works list to JSON string
+        request: UpdatedToDoListRequest
+    ): Boolean {
+        val serializedWorks = json.encodeToString(request.listOfWorks)  // Serialize works list to JSON string
 
         val affectedRows = database.update(ToDoLists) {
-            set(it.title, title)
-            set(it.description, description)
+            set(it.title, request.title)
+            set(it.description, request.description)
             set(it.listOfWorks, serializedWorks)
-            set(it.editedTime, editedTime)
-            set(it.priority, priority)
-            set(it.isPinned, isPinned)
-            set(it.progress, progress)
+            set(it.editedTime, request.editedTime)
+            set(it.priority, request.priority)
+            set(it.isPinned, request.isPinned)
+            set(it.progress, request.progress)
             where { (it.id eq id) and (it.ownerId eq ownerId) }
         }
 

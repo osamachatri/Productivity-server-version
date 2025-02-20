@@ -1,31 +1,14 @@
-package com.oussama_chatri.routes
+package com.oussama_chatri.Api.routes
 
 import com.oussama_chatri.data.daos.NoteDao
+import com.oussama_chatri.Api.requests.NoteRequest
+import com.oussama_chatri.Api.requests.UpdatedNoteRequest
 import io.ktor.http.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class NoteRequest(
-    val title: String,
-    val content: String,
-    val type: String,
-    val creationTime: Long,
-    val isPinned: Boolean
-)
-
-@Serializable
-data class UpdatedNoteRequest(
-    val title: String,
-    val content: String,
-    val type: String,
-    val editedTime: Long,
-    val isPinned: Boolean
-)
 
 fun Route.notesRoutes() {
     route("/notes") {
@@ -41,19 +24,14 @@ fun Route.notesRoutes() {
 
                     val noteId = NoteDao().createNote(
                         ownerId = userId,
-                        title = request.title,
-                        content = request.content,
-                        type = request.type,
-                        creationTime = request.creationTime,
-                        editedTime = request.creationTime,
-                        isPinned = request.isPinned
+                        request
                     )
                     if (noteId > 0) {
-                        call.respond(HttpStatusCode.Created, "It's successfully created note: $noteId" )
+                        call.respond(HttpStatusCode.Created, "It's successfully created note: $noteId")
                     } else {
                         call.respond(HttpStatusCode.InternalServerError, "It's not successfully created note: $noteId")
                     }
-                }catch (ex: Exception){
+                } catch (ex: Exception) {
                     ex.printStackTrace()
                 }
 
@@ -84,11 +62,7 @@ fun Route.notesRoutes() {
                 val updated = NoteDao().updateNote(
                     noteId = noteId,
                     ownerId = userId ?: "-1",
-                    title = request.title,
-                    content = request.content,
-                    type = request.type,
-                    editedTime = request.editedTime,
-                    isPinned = request.isPinned
+                    request
                 )
 
                 if (updated) {

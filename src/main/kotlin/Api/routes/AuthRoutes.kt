@@ -1,4 +1,4 @@
-package com.oussama_chatri.routes
+package com.oussama_chatri.Api.routes
 
 import com.oussama_chatri.data.daos.AccountDao
 import com.oussama_chatri.security.JwtConfig
