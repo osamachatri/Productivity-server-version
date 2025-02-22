@@ -1,15 +1,15 @@
 package com.oussama_chatri.data.daos
 
 
-import com.oussama_chatri.DatabaseFactory
+import com.oussama_chatri.api.requests.NoteRequest
+import com.oussama_chatri.api.requests.UpdatedNoteRequest
+import com.oussama_chatri.api.responses.NoteResponse
 import com.oussama_chatri.data.entities.Notes
-import com.oussama_chatri.Api.requests.NoteRequest
-import com.oussama_chatri.Api.requests.UpdatedNoteRequest
-import com.oussama_chatri.Api.responses.NoteResponse
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 
-class NoteDao(private val database: Database = DatabaseFactory.db) {
+class NoteDao(private val database : Database ) {
+
     fun getAllNotesByUserId(userId: String): List<NoteResponse> {
         return database.from(Notes).select()
             .where(Notes.ownerId eq userId)

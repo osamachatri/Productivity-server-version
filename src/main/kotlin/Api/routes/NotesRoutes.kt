@@ -1,17 +1,19 @@
-package com.oussama_chatri.Api.routes
+package com.oussama_chatri.api.routes
 
+import com.oussama_chatri.api.requests.NoteRequest
+import com.oussama_chatri.api.requests.UpdatedNoteRequest
 import com.oussama_chatri.data.daos.NoteDao
-import com.oussama_chatri.Api.requests.NoteRequest
-import com.oussama_chatri.Api.requests.UpdatedNoteRequest
 import io.ktor.http.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.koin.ktor.ext.inject
 
 fun Route.notesRoutes() {
     route("/notes") {
+        val noteDao by inject<NoteDao>()
         authenticate("auth-jwt") {
             post {
                 try {
@@ -22,7 +24,7 @@ fun Route.notesRoutes() {
 
                     val request = call.receive<NoteRequest>()
 
-                    val noteId = NoteDao().createNote(
+                    val noteId = noteDao.createNote(
                         ownerId = userId,
                         request
                     )
@@ -41,7 +43,7 @@ fun Route.notesRoutes() {
                 val principal = call.principal<JWTPrincipal>()
                 val userId = principal?.payload?.getClaim("user_id")?.asString()
 
-                val notes = NoteDao().getAllNotesByUserId(userId ?: "-1")
+                val notes = noteDao.getAllNotesByUserId(userId ?: "-1")
                 call.respond(HttpStatusCode.OK, notes)
             }
 
@@ -59,7 +61,7 @@ fun Route.notesRoutes() {
 
                 val request = call.receive<UpdatedNoteRequest>()
 
-                val updated = NoteDao().updateNote(
+                val updated = noteDao.updateNote(
                     noteId = noteId,
                     ownerId = userId ?: "-1",
                     request
@@ -85,7 +87,7 @@ fun Route.notesRoutes() {
                     return@delete
                 }
 
-                val deleted = NoteDao().deleteNote(noteId, userId)
+                val deleted = noteDao.deleteNote(noteId, userId)
 
                 if (deleted) {
                     call.respond(HttpStatusCode.OK, "Note deleted successfully")

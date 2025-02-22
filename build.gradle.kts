@@ -40,5 +40,10 @@ dependencies {
     // JSON Serialization
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.6")
     implementation("io.ktor:ktor-server-content-negotiation:2.3.6")
+    //Koin Injection
+    implementation("io.insert-koin:koin-ktor:4.0.2")
+    implementation("io.insert-koin:koin-logger-slf4j:4.0.2")
+    implementation("io.insert-koin:koin-ktor:4.0.2")
+
 
 }
