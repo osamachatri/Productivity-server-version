@@ -15,4 +15,3 @@ data class ToDoList(
     val isPinned: Boolean,
     val progress: Float
 )
-

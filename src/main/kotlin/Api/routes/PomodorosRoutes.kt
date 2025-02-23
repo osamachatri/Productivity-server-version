@@ -29,8 +29,8 @@ fun Route.pomodoroRoutes() {
                     request
                 )
 
-                if (pomodoroId > 0) call.respond(HttpStatusCode.OK, "It's successfully created event: $pomodoroId")
-                else call.respond(HttpStatusCode.InternalServerError, "It's not successfully created event: $pomodoroId")
+                if (pomodoroId > 0) call.respond(HttpStatusCode.OK, "It's successfully created pomodoro: $pomodoroId")
+                else call.respond(HttpStatusCode.InternalServerError, "It's not successfully created pomodoro: $pomodoroId")
             }
 
             get {

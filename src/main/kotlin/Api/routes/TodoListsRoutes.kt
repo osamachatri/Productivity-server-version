@@ -30,8 +30,8 @@ fun Route.toDoListsRoutes() {
                     request
                 )
 
-                if (toDoListId > 0) call.respond(HttpStatusCode.OK, "It's successfully created note: $toDoListId")
-                else call.respond(HttpStatusCode.InternalServerError, "It's not successfully created note: $toDoListId")
+                if (toDoListId > 0) call.respond(HttpStatusCode.OK, "It's successfully created to do list: $toDoListId")
+                else call.respond(HttpStatusCode.InternalServerError, "It's not successfully created to do list: $toDoListId")
             }
 
             get {

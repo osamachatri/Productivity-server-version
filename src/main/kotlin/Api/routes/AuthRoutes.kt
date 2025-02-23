@@ -84,7 +84,7 @@ fun Route.authRoutes() {
                 is LoginRequestByEmail -> {
                     val user = AccountDao().getAccountByEmail(request.email)
                     if (user != null){
-                        val verifyPassword = BCrypt.checkpw(request.password, user.passwordHash)
+                        val verifyPassword = BCrypt.checkpw(request.password, user!!.passwordHash)
                         if (verifyPassword) {
                             val token = JwtConfig.generateToken(user.userId.toString())
                             call.respond(HttpStatusCode.OK, mapOf("token" to token))

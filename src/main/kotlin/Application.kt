@@ -41,5 +41,6 @@ fun Application.module() {
         toDoListsRoutes()
         eventRoutes()
         pomodoroRoutes()
+        notificationsRoutes()
     }
 }

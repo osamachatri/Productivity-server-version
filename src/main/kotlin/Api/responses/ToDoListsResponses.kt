@@ -1,6 +1,6 @@
 package com.oussama_chatri.Api.responses
 
-import com.oussama_chatri.data.model.Work
+import com.oussama_chatri.Api.requests.Work
 import kotlinx.serialization.Serializable
 
 @Serializable
