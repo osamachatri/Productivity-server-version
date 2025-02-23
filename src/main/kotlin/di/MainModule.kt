@@ -3,6 +3,7 @@ package com.oussama_chatri.di
 import com.oussama_chatri.DatabaseFactory
 import com.oussama_chatri.data.daos.EventDao
 import com.oussama_chatri.data.daos.NoteDao
+import com.oussama_chatri.data.daos.PomodoroDao
 import com.oussama_chatri.data.daos.ToDoListDao
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -22,5 +23,9 @@ val mainModule = module {
 
     single {
         EventDao(get())
+    }
+
+    single {
+        PomodoroDao(get())
     }
 }

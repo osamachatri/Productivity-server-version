@@ -1,11 +1,9 @@
-package com.oussama_chatri.data.model
+package com.oussama_chatri.Api.responses
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Pomodoro(
-    val id: Int,
-    val ownerId: String,
+data class PomodoroResponse(
     val priority: String,
     val title: String,
     val description: String?,
