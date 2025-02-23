@@ -1,8 +1,7 @@
 package com.oussama_chatri.Api.routes
 
-import com.oussama_chatri.Api.requests.ToDoListRequest
-import com.oussama_chatri.Api.requests.UpdatedToDoListRequest
-import com.oussama_chatri.data.daos.ToDoListDao
+import com.oussama_chatri.Api.comman.EventsRequestAndResponse
+import com.oussama_chatri.data.daos.EventDao
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -12,10 +11,9 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
-
-fun Route.toDoListsRoutes() {
-    route("/todolists") {
-        val toDoListDao by inject<ToDoListDao>()
+fun Route.eventRoutes() {
+    route("/events") {
+        val eventDao by inject<EventDao>()
         authenticate("auth-jwt") {
             post {
 
@@ -23,15 +21,15 @@ fun Route.toDoListsRoutes() {
                 val userId = principal?.payload?.getClaim("user_id")?.asString()
                     ?: throw IllegalArgumentException("Missing or invalid user_id claim in token")
 
-                val request = call.receive<ToDoListRequest>()
+                val request = call.receive<EventsRequestAndResponse>()
 
-                val toDoListId = toDoListDao.createToDoList(
+                val eventId = eventDao.createEvent(
                     ownerId = userId,
                     request
                 )
 
-                if (toDoListId > 0) call.respond(HttpStatusCode.OK, "It's successfully created note: $toDoListId")
-                else call.respond(HttpStatusCode.InternalServerError, "It's not successfully created note: $toDoListId")
+                if (eventId > 0) call.respond(HttpStatusCode.OK, "It's successfully created event: $eventId")
+                else call.respond(HttpStatusCode.InternalServerError, "It's not successfully created event: $eventId")
             }
 
             get {
@@ -39,8 +37,8 @@ fun Route.toDoListsRoutes() {
                 val userId = principal?.payload?.getClaim("user_id")?.asString()
                     ?: throw IllegalArgumentException("Missing user_id claim in token")
 
-                val toDoLists = toDoListDao.getAllToDoLists(userId)
-                if (toDoLists.isNotEmpty()) call.respond(HttpStatusCode.OK, toDoLists)
+                val events = eventDao.getAllEvents(userId)
+                if (events.isNotEmpty()) call.respond(HttpStatusCode.OK, events)
                 else call.respond(HttpStatusCode.InternalServerError, "It's not successfully not found")
             }
 
@@ -50,16 +48,16 @@ fun Route.toDoListsRoutes() {
                 val userId = principal?.payload?.getClaim("user_id")?.asString()
                     ?: throw IllegalArgumentException("Missing user_id claim in token")
 
-                val toDoListId = call.parameters["id"]?.toIntOrNull()
-                if (toDoListId == null) {
+                val eventID = call.parameters["id"]?.toIntOrNull()
+                if (eventID == null) {
                     call.respond(HttpStatusCode.BadRequest, "Bad request")
                     return@put
                 }
 
-                val request = call.receive<UpdatedToDoListRequest>()
+                val request = call.receive<EventsRequestAndResponse>()
 
-                val updated = toDoListDao.updateToDoList(
-                    toDoListId,
+                val updated = eventDao.updateEvent(
+                    eventID,
                     userId,
                     request
                 )
@@ -74,14 +72,14 @@ fun Route.toDoListsRoutes() {
                 val userId = principal?.payload?.getClaim("user_id")?.asString()
                     ?: throw IllegalArgumentException("Missing user_id claim in token")
 
-                val toDoListId = call.parameters["id"]?.toIntOrNull()
+                val eventId = call.parameters["id"]?.toIntOrNull()
 
-                if (toDoListId == null) {
+                if (eventId == null) {
                     call.respond(HttpStatusCode.BadRequest, "Bad request")
                     return@delete
                 }
 
-                val deleted = toDoListDao.deleteToDoList(toDoListId, userId)
+                val deleted = eventDao.deleteEvent(eventId, userId)
 
                 if (deleted) call.respond(HttpStatusCode.OK, "It's successfully deleted")
                 else call.respond(HttpStatusCode.InternalServerError, "It's not successfully deleted")

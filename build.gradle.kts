@@ -1,9 +1,10 @@
 val kotlin_version: String by project
 val logback_version: String by project
+val koin_version = "4.0.0"
 
 plugins {
     kotlin("jvm") version "2.1.10"
-    id("io.ktor.plugin") version "3.0.3"
+    id("io.ktor.plugin") version "2.3.7"
     kotlin("plugin.serialization") version "1.9.0"
 }
 
@@ -40,10 +41,7 @@ dependencies {
     // JSON Serialization
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.6")
     implementation("io.ktor:ktor-server-content-negotiation:2.3.6")
-    //Koin Injection
-    implementation("io.insert-koin:koin-ktor:4.0.2")
-    implementation("io.insert-koin:koin-logger-slf4j:4.0.2")
-    implementation("io.insert-koin:koin-ktor:4.0.2")
-
-
+    // Koin dependencies
+    implementation("io.insert-koin:koin-ktor:$koin_version")
+    implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
 }

@@ -1,9 +1,10 @@
-package com.oussama_chatri.api.routes
+package com.oussama_chatri.Api.routes
 
-import com.oussama_chatri.api.requests.NoteRequest
-import com.oussama_chatri.api.requests.UpdatedNoteRequest
+import com.oussama_chatri.Api.requests.NoteRequest
+import com.oussama_chatri.Api.requests.UpdatedNoteRequest
 import com.oussama_chatri.data.daos.NoteDao
 import io.ktor.http.*
+import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*

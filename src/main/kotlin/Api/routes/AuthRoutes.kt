@@ -3,6 +3,7 @@ package com.oussama_chatri.Api.routes
 import com.oussama_chatri.data.daos.AccountDao
 import com.oussama_chatri.security.JwtConfig
 import io.ktor.http.*
+import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*

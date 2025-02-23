@@ -1,9 +1,9 @@
 package com.oussama_chatri.data.daos
 
 
-import com.oussama_chatri.api.requests.NoteRequest
-import com.oussama_chatri.api.requests.UpdatedNoteRequest
-import com.oussama_chatri.api.responses.NoteResponse
+import com.oussama_chatri.Api.requests.NoteRequest
+import com.oussama_chatri.Api.requests.UpdatedNoteRequest
+import com.oussama_chatri.Api.responses.NoteResponse
 import com.oussama_chatri.data.entities.Notes
 import org.ktorm.database.Database
 import org.ktorm.dsl.*

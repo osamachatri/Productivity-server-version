@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Work(
-    val ownerId: Int,
     val title: String,
     val description: String?,
     val startTime: Long,

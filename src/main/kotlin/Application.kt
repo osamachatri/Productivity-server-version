@@ -1,6 +1,7 @@
 package com.oussama_chatri
 
 import com.oussama_chatri.Api.routes.authRoutes
+import com.oussama_chatri.Api.routes.eventRoutes
 import com.oussama_chatri.Api.routes.notesRoutes
 import com.oussama_chatri.Api.routes.toDoListsRoutes
 import com.oussama_chatri.di.initModules
@@ -12,7 +13,7 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
-import org.koin.ktor.plugin.Koin
+import org.koin.ktor.plugin.KoinIsolated
 import org.koin.logger.slf4jLogger
 
 fun main(args: Array<String>): Unit {
@@ -32,7 +33,7 @@ fun Application.module() {
         json()
     }
 
-    install(Koin){
+    install(KoinIsolated){
         slf4jLogger()
         modules(mainModule)
     }
@@ -41,6 +42,6 @@ fun Application.module() {
         authRoutes()
         notesRoutes()
         toDoListsRoutes()
-
+        eventRoutes()
     }
 }
